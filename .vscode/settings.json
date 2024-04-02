@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "stdint.h": "c",
+        "haluart.h": "c",
+        "stdarg.h": "c",
+        "interrupt.h": "c",
+        "halinterrupt.h": "c",
+        "stdbool.h": "c",
+        "timer.h": "c",
+        "haltimer.h": "c",
+        "armv7ar.h": "c",
+        "task.h": "c",
+        "kernel.h": "c",
+        "stdlib.h": "c",
+        "memio.h": "c",
+        "uart.h": "c",
+        "event.h": "c",
+        "msg.h": "c",
+        "random": "c",
+        "armcpu.h": "c"
+    }
+}
