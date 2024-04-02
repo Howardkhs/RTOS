@@ -3,9 +3,12 @@
 #include "HalUart.h"
 #include "HalInterrupt.h"
 #include "stdio.h"
+#include "HalTimer.h"
+#include "stdlib.h"
 
 static void Hw_init(void);
 static void Printf_test(void);
+static void Timer_test(void);
 
 void main(void){
     
@@ -20,12 +23,7 @@ void main(void){
     putstr("Hello World!\n");
 
     Printf_test();
-
-    i = 100;
-    while(i--){
-        uint8_t ch = Hal_uart_get_char();
-        Hal_uart_put_char(ch);
-    }
+    Timer_test();
 
     while(true);
 
@@ -34,6 +32,7 @@ void main(void){
 static void Hw_init(void){
     Hal_interrupt_init();
     Hal_uart_init();
+    Hal_timer_init();
 }
 
 static void Printf_test(void)
@@ -47,4 +46,11 @@ static void Printf_test(void)
     debug_printf("%s is null pointer, %u number\n", nullptr, 10);
     debug_printf("%u = 5\n", i);
     debug_printf("dec=%u hex=%x\n", 0xff, 0xff);
+}
+
+static void Timer_test(void){
+    while(true){
+        debug_printf("currenc count : %u\n", Hal_timer_get_1ms_counter());
+        delay(1000);
+    }
 }
