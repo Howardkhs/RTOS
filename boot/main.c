@@ -34,7 +34,7 @@ void main(void)
     putstr("Hello World!\n");
 
     Printf_test();
-    // Timer_test();
+    Timer_test();
 
     Kernel_init();
 
@@ -54,20 +54,19 @@ static void Kernel_init(void)
     uint32_t taskId;
 
     Kernel_task_init();
-
-    taskId = Kernel_task_create(User_task0);
+    taskId = Kernel_task_create(User_task0, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
     {
         putstr("Task0 creation fail\n");
     }
-
-    taskId = Kernel_task_create(User_task1);
+  
+    taskId = Kernel_task_create(User_task1, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
     {
         putstr("Task1 creation fail\n");
     }
 
-    taskId = Kernel_task_create(User_task2);
+    taskId = Kernel_task_create(User_task2, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
     {
         putstr("Task2 creation fail\n");
