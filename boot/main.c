@@ -8,7 +8,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#include "task.h"
+#include "Kernel.h"
 
 static void Hw_init(void);
 static void Kernel_init(void);
@@ -54,12 +54,13 @@ static void Kernel_init(void)
     uint32_t taskId;
 
     Kernel_task_init();
+
     taskId = Kernel_task_create(User_task0, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
     {
         putstr("Task0 creation fail\n");
     }
-  
+
     taskId = Kernel_task_create(User_task1, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
     {
@@ -71,6 +72,8 @@ static void Kernel_init(void)
     {
         putstr("Task2 creation fail\n");
     }
+
+    Kernel_start();
 }
 
 static void Printf_test(void)
@@ -100,21 +103,33 @@ static void Timer_test(void)
 
 void User_task0(void)
 {
-    debug_printf("User Task #0\n");
+    uint32_t local = 0;
 
-    while(true);
+    while(true)
+    {
+        debug_printf("User Task #0 SP=0x%x\n", &local);
+        Kernel_yield();
+    }
 }
 
 void User_task1(void)
 {
-    debug_printf("User Task #1\n");
+    uint32_t local = 0;
 
-    while(true);
+    while(true)
+    {
+        debug_printf("User Task #1 SP=0x%x\n", &local);
+        Kernel_yield();
+    }
 }
 
 void User_task2(void)
 {
-    debug_printf("User Task #2\n");
+    uint32_t local = 0;
 
-    while(true);
+    while(true)
+    {
+        debug_printf("User Task #2 SP=0x%x\n", &local);
+        Kernel_yield();
+    }
 }
