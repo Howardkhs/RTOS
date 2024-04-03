@@ -18,6 +18,7 @@
         "event.h": "c",
         "msg.h": "c",
         "random": "c",
-        "armcpu.h": "c"
+        "armcpu.h": "c",
+        "memorymap.h": "c"
     }
 }
