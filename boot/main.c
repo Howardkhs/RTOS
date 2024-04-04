@@ -104,32 +104,47 @@ static void Timer_test(void)
 void User_task0(void)
 {
     uint32_t local = 0;
+    uint32_t start_time = Hal_timer_get_1ms_counter();
+    debug_printf("User Task #0 SP=0x%x Started at %u\n", &local, start_time);
 
     while(true)
     {
-        debug_printf("User Task #0 SP=0x%x\n", &local);
-        Kernel_yield();
+        if (start_time + 1000 == Hal_timer_get_1ms_counter()){
+            debug_printf("User Task #0 Switched at %u\n", start_time);
+            Kernel_yield();
+            start_time = Hal_timer_get_1ms_counter();
+        }
     }
 }
 
 void User_task1(void)
 {
     uint32_t local = 0;
+    uint32_t start_time = Hal_timer_get_1ms_counter();
+    debug_printf("User Task #1 SP=0x%x Started at %u\n", &local, start_time);
 
     while(true)
     {
-        debug_printf("User Task #1 SP=0x%x\n", &local);
-        Kernel_yield();
+        if (start_time + 1000 == Hal_timer_get_1ms_counter()){
+            debug_printf("User Task #1 Switched at %u\n", start_time);
+            Kernel_yield();
+            start_time = Hal_timer_get_1ms_counter();
+        }
     }
 }
 
 void User_task2(void)
 {
     uint32_t local = 0;
+    uint32_t start_time = Hal_timer_get_1ms_counter();
+    debug_printf("User Task #2 SP=0x%x Started at %u\n", &local, start_time);
 
     while(true)
     {
-        debug_printf("User Task #2 SP=0x%x\n", &local);
-        Kernel_yield();
+        if (start_time + 1000 == Hal_timer_get_1ms_counter()){
+            debug_printf("User Task #2 Switched at %u\n", start_time);
+            Kernel_yield();
+            start_time = Hal_timer_get_1ms_counter();
+        }
     }
 }
