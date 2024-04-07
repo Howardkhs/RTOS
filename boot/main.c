@@ -9,6 +9,7 @@
 #include "stdlib.h"
 
 #include "Kernel.h"
+#include "event.h"
 
 static void Hw_init(void);
 static void Kernel_init(void);
@@ -54,6 +55,7 @@ static void Kernel_init(void)
     uint32_t taskId;
 
     Kernel_task_init();
+    Kernel_event_flag_init();
 
     taskId = Kernel_task_create(User_task0, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
@@ -109,6 +111,18 @@ void User_task0(void)
 
     while(true)
     {
+
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn|KernelEventFlag_CmdOut);
+        switch(handle_event){
+            case KernelEventFlag_UartIn:
+                debug_printf("\nEvent handled by Task0\n");
+                Kernel_send_events(KernelEventFlag_CmdIn);
+                break;
+            case KernelEventFlag_CmdOut:
+                debug_printf("\nCmdOut Event by Task0\n");
+                break;
+        }
+
         if (start_time + 1000 == Hal_timer_get_1ms_counter()){
             debug_printf("User Task #0 Switched at %u\n", start_time);
             Kernel_yield();
@@ -124,7 +138,13 @@ void User_task1(void)
     debug_printf("User Task #1 SP=0x%x Started at %u\n", &local, start_time);
 
     while(true)
-    {
+    {   
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_CmdIn);
+        switch(handle_event){
+            case KernelEventFlag_CmdIn:
+                debug_printf("\nEvent handled by Task1\n");
+                break;
+        }
         if (start_time + 1000 == Hal_timer_get_1ms_counter()){
             debug_printf("User Task #1 Switched at %u\n", start_time);
             Kernel_yield();
