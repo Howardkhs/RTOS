@@ -48,6 +48,9 @@ typedef struct Timer_t
 #define TIMER_CPU_BASE  0x10011000
 #define TIMER_INTERRUPT 36
 
+#define TIMER2_CPU_BASE  0x10012000
+#define TIMER2_INTERRUPT 37
+
 #define TIMER_FREERUNNING   0
 #define TIMER_PERIOIC       1
 

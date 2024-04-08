@@ -19,6 +19,7 @@
         "msg.h": "c",
         "random": "c",
         "armcpu.h": "c",
-        "memorymap.h": "c"
+        "memorymap.h": "c",
+        "timer2.h": "c"
     }
 }

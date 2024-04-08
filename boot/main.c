@@ -60,6 +60,7 @@ static void Kernel_init(void)
     Kernel_msgQ_init();
     Kernel_sem_init(1);
     Kernel_mutex_init();
+    Hal_timer2_init();
 
     taskId = Kernel_task_create(User_task0, 0);
     if (NOT_ENOUGH_TASK_NUM == taskId)
@@ -130,11 +131,14 @@ void User_task0(void)
     uint8_t  cmdBuf[16];
     uint32_t cmdBufIdx = 0;
     uint8_t  uartch = 0;
+    uint32_t runtime = 1000 * 1000;
 
+    
     while(true)
     {
+        Proc_Timer2_on(runtime); // 1000 -> 1ms
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn|KernelEventFlag_CmdOut|KernelEventFlag_ProcTimeout);
 
-        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn|KernelEventFlag_CmdOut);
         switch(handle_event){
             case KernelEventFlag_UartIn:
                 Kernel_recv_msg(KernelMsgQ_Task0, &uartch, 1);
@@ -154,10 +158,13 @@ void User_task0(void)
                 }
                 break;
             case KernelEventFlag_CmdOut:
-                Test_critical_section(5, 0);
+                // Test_critical_section(5, 0);
                 break;
+            case KernelEventFlag_ProcTimeout:
+                debug_printf("User Task #0 SP=0x%x Switched at %u\n", &local, Hal_timer_get_1ms_counter());
+                Kernel_yield();
         }
-        Kernel_yield();
+        // Kernel_yield();
     }
 }
 
@@ -169,10 +176,12 @@ void User_task1(void)
 
     uint8_t cmdlen = 0;
     uint8_t cmd[16] = {0};
+    uint32_t runtime = 1000 * 1000;
 
     while(true)
     {   
-        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_CmdIn|KernelEventFlag_Unlock);
+        Proc_Timer2_on(runtime); // 1000 -> 1ms
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn|KernelEventFlag_CmdOut|KernelEventFlag_ProcTimeout);
         switch(handle_event){
             case KernelEventFlag_CmdIn:
                 memclr(cmd, 16);
@@ -183,9 +192,10 @@ void User_task1(void)
             case KernelEventFlag_Unlock:
                 Kernel_unlock_mutex();
                 break;
+            case KernelEventFlag_ProcTimeout:
+                debug_printf("User Task #1 SP=0x%x Switched at %u\n", &local, Hal_timer_get_1ms_counter());
+                Kernel_yield();
         }
-        Kernel_yield();
-    
     }
 }
 
@@ -194,10 +204,16 @@ void User_task2(void)
     uint32_t local = 0;
     uint32_t start_time = Hal_timer_get_1ms_counter();
     debug_printf("User Task #2 SP=0x%x Started at %u\n", &local, start_time);
-
+    uint32_t runtime = 1000 * 1000;
     while(true)
     {
-        Test_critical_section(3, 2);
-        Kernel_yield();
+        Proc_Timer2_on(runtime); // 1000 -> 1ms
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn|KernelEventFlag_CmdOut|KernelEventFlag_ProcTimeout);
+        switch(handle_event){
+            case KernelEventFlag_ProcTimeout:
+                debug_printf("User Task #2 SP=0x%x Switched at %u\n", &local, Hal_timer_get_1ms_counter());
+                Kernel_yield();
+        }
+        // Test_critical_section(3, 2);
     }
 }
