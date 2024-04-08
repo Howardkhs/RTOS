@@ -63,6 +63,10 @@ void Kernel_task_scheduler(void){
     Kernel_task_context_switching();
 }
 
+uint32_t Kernel_task_get_current_task_id(void){
+    return sCurrent_tcb_index;
+}
+
 __attribute__ ((naked)) void Kernel_task_context_switching(void){
     __asm__ ("B Save_context");
     __asm__ ("B Restore_context");
@@ -90,6 +94,7 @@ static __attribute__ ((naked)) void Restore_context(void)
     __asm__ ("POP  {r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12}");
     __asm__ ("POP  {pc}");  // 이 pc 값으로 다음 명령어 자동 실행
 }
+
 
 // static KernelTcb_t* Scheduler_priority_algorithm(void){
 //     for(uint32_t i = 0; i < sAllocated_tcb_index; i++){

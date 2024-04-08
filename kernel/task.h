@@ -23,5 +23,6 @@ typedef void (*KernelTaskFunc_t)(void);
 
 void Kernel_task_init(void);
 uint32_t Kernel_task_create(KernelTaskFunc_t startFunc, uint32_t priority);
+uint32_t Kernel_task_get_current_task_id(void);
 
 #endif
